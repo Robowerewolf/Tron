@@ -17,7 +17,7 @@ enum MYKEYS2 {
 	KEY_A, KEY_S, KEY_D, KEY_W
 
 };
-enum DIRECTIONS {RIGHT, LEFT, UP, DOWN};
+enum DIRECTIONS { RIGHT, LEFT, UP, DOWN };
 
 int main() {
 	//setting up matrix
@@ -77,17 +77,6 @@ int main() {
 	//load font
 	font = al_load_ttf_font("tron.ttf", 25, NULL);
 
-	player1 = al_create_bitmap(player1_SIZE, player1_SIZE);
-	player2 = al_create_bitmap(player2_SIZE, player2_SIZE);
-
-	al_set_target_bitmap(player1);
-
-	al_clear_to_color(al_map_rgb(0, 0, 255));//player 1 color
-
-	al_set_target_bitmap(player2);
-
-	al_clear_to_color(al_map_rgb(255, 255, 0));//player 2 color
-	
 	al_set_target_bitmap(al_get_backbuffer(display));
 
 	event_queue = al_create_event_queue();
@@ -104,9 +93,10 @@ int main() {
 
 	al_start_timer(timer);
 
-	//player1 = al_load_bitmap("Blue bike.png");
-	//player2 = al_load_bitmap("yellow bike.png");
-
+	player1 = al_load_bitmap("Blue bike.png");
+	al_convert_mask_to_alpha(player1, al_map_rgb(255, 255, 255));
+	player2 = al_load_bitmap("yellow bike.png");
+	al_convert_mask_to_alpha(player2, al_map_rgb(255, 255, 255));
 	//gameloop
 	while (!doexit) {
 
@@ -138,6 +128,7 @@ int main() {
 				dy1 = -1;
 				dx1 = 0;
 				dir = UP;//used for collision
+
 			}
 
 			if (key[KEY_DOWN]) {
@@ -197,38 +188,68 @@ int main() {
 
 			//check right collision for p1
 			if (dir == RIGHT && grid[(player1_x + 10) / 10][player1_y / 10] != 0) {
+				grid[(player1_x + 10) / 10][player1_y / 10] = 7;
 				cout << "CRASH right" << endl;
 				player1_x = 300;
 				player1_y = 400;
 				liv1--;
+				//print to console for testing 
+				for (int i = 0; i < 50; i++) {
+					for (int j = 0; j < 50; j++)
+						cout << grid[i][j];
+					cout << endl;
+					
+				}system("pause");
 			}
 
 			//check left collision for p1
+			//if (dir == LEFT && grid[(player1_x - 10) / 10][player1_y / 10] != 0) {
 			if (dir == LEFT && grid[(player1_x - 10) / 10][player1_y / 10] != 0) {
+				grid[(player1_x - 10) / 10][player1_y / 10] = 7;
 				cout << "CRASH left" << endl;
 				player1_x = 300;
 				player1_y = 400;
 				liv1--;
+				//print to console for testing 
+				for (int i = 0; i < 50; i++) {
+					for (int j = 0; j < 50; j++)
+						cout << grid[i][j];
+					cout << endl; 
+				}system("pause");
 			}
 
 			//check up collision for p1
 			if (dir == UP && grid[(player1_y - 30) / 10][player1_x / 10] != 0) {
-				cout << "CRASH up at"<< player1_x<<" , "<<player1_y << endl;
-				player1_x = 300;
-				player1_y = 400;
-				liv1--;
-			}
-
-			//check down collision for p1
-			if (dir == DOWN && grid[(player1_y +10) / 10][player1_x / 10] != 0) {
+				grid[(player1_y - 30) / 10][player1_x / 10] = 7;
 				cout << "CRASH up at" << player1_x << " , " << player1_y << endl;
 				player1_x = 300;
 				player1_y = 400;
 				liv1--;
+				//print to console for testing 
+				for (int i = 0; i < 50; i++) {
+					for (int j = 0; j < 50; j++)
+						cout << grid[i][j];
+					cout << endl; 
+				}system("pause");
+			}
+
+			//check down collision for p1
+			if (dir == DOWN && grid[(player1_y + 10) / 10][player1_x / 10] != 0) {
+				grid[(player1_y + 10) / 10][player1_x / 10] = 7;
+				cout << "CRASH down at" << player1_x << " , " << player1_y << endl;
+				player1_x = 300;
+				player1_y = 400;
+				liv1--;
+				//print to console for testing 
+				for (int i = 0; i < 50; i++) {
+					for (int j = 0; j < 50; j++)
+						cout << grid[i][j];
+					cout << endl; 
+				}system("pause");
 			}
 
 			//check right collision for p2
-			if (dir == RIGHT && grid[(player2_x + 10) / 10][player2_y / 10] != 0) {
+			if (dir2 == RIGHT && grid[(player2_x + 10) / 10][player2_y / 10] != 0) {
 				cout << "CRASH right" << endl;
 				player2_x = 150;
 				player2_y = 200;
@@ -236,7 +257,7 @@ int main() {
 			}
 
 			//check left collision for p2
-			if (dir == LEFT && grid[(player2_x - 10) / 10][player2_y / 10] != 0) {
+			if (dir2 == LEFT && grid[(player2_x - 10) / 10][player2_y / 10] != 0) {
 				cout << "CRASH left" << endl;
 				player2_x = 150;
 				player2_y = 200;
@@ -244,7 +265,7 @@ int main() {
 			}
 
 			//check up collision for p2
-			if (dir == UP && grid[(player2_y - 30) / 10][player2_x / 10] != 0) {
+			if (dir2 == UP && grid[(player2_y - 30) / 10][player2_x / 10] != 0) {
 				cout << "CRASH up at" << player2_x << " , " << player2_y << endl;
 				player2_x = 150;
 				player2_y = 200;
@@ -252,7 +273,7 @@ int main() {
 			}
 
 			//check down collision for p2
-			if (dir == DOWN && grid[(player2_y + 10) / 10][player2_x / 10] != 0) {
+			if (dir2 == DOWN && grid[(player2_y + 10) / 10][player2_x / 10] != 0) {
 				cout << "CRASH up at" << player2_x << " , " << player2_y << endl;
 				player2_x = 150;
 				player2_y = 200;
@@ -356,7 +377,7 @@ int main() {
 				for (int j = 0; j < 50; j++) {
 					if (grid[i][j] == 1)
 						al_draw_filled_rectangle(i * 10, j * 10, i * 10 + 10, j * 10 + 10, al_map_rgb(255, 255, 255));
-					if(grid[i][j] == 2)
+					if (grid[i][j] == 2)
 						al_draw_filled_rectangle(i * 10, j * 10, i * 10 + 10, j * 10 + 10, al_map_rgb(0, 0, 255));//player 1 streak
 					if (grid[i][j] == 3)
 						al_draw_filled_rectangle(i * 10, j * 10, i * 10 + 10, j * 10 + 10, al_map_rgb(255, 255, 50));//player 2 streak
@@ -375,7 +396,7 @@ int main() {
 		}//end render section
 	}//end game loop
 
-	//clear up memory
+	 //clear up memory
 	al_destroy_bitmap(player1);
 	al_destroy_bitmap(player2);
 	al_destroy_timer(timer);
